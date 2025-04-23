@@ -15,7 +15,7 @@ function totalByFormula(N) {
     return (N * (N + 1)) / 2;
 }
 
-export {
+module.exports = {
     totalByFormula,
     totalByLoop,
     totalByReduce

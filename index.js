@@ -1,8 +1,7 @@
 const express = require('express')
-const { totalByReduce, totalByLoop, totalByFormula } = require('./total')
 const app = express()
 const port = process.env.PORT || 5000
-
+const { totalByFormula, totalByLoop, totalByReduce } = require("./total");
 app.use(express.json())
 
 app.get('/', (req, res) => {
