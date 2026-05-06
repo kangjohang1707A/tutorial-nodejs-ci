@@ -1,0 +1,27 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main  # Hoặc master tùy bạn
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/your/project  # Đường dẫn đến thư mục dự án trên server
+            git pull origin main
+            docker build -t my-node-app .
+            docker stop my-running-app || true
+            docker rm my-running-app || true
+            docker run -d -p 3000:3000 --name my-running-app my-node-app
