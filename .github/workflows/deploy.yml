@@ -20,8 +20,24 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             # Di chuyển vào thư mục dự án
-            cd /home/tutorial-nodejs-ci 
+            cd /home/tutorial-nodejs-ci || exit
             
             # Kéo code mới về
             git pull origin main
+
+            # 3. Build lại image mới
+            sudo docker build -t backend-app .
+
+            # 4. Dừng và xóa container cũ nếu đang chạy
+            sudo docker stop backend || true
+            sudo docker rm backend || true
+
+            # 5. Chạy container mới với port 5000
+            docker run -d \
+              --name backend-container \
+              --restart always \
+              -p 5000:5000
+              backend-app
+            # 6. Dọn dẹp các image cũ không dùng để tiết kiệm ổ cứng VPS
+            docker image prune -f 
 
