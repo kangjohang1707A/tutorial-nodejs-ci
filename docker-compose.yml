@@ -1,9 +1,9 @@
 services:
   app:
-    image: node-app:latest
-    container_name: node_express_app
+    image: backend-app:latest
+    container_name: backend-container
     ports:
-      - "3000:3000"
-    restart: unless-stopped
+      - "5000:5000"
+    restart: always
     environment:
       - NODE_ENV=production

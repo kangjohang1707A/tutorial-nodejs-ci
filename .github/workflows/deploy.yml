@@ -2,7 +2,7 @@ name: Deploy Backend to VPS NAT
 
 on:
   push:
-    branches: [ main ] # Chạy khi bạn push vào branch main
+    branches: [main] # Chạy khi bạn push vào branch main
 
 jobs:
   deploy:
@@ -10,6 +10,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # Thiết lập Docker buildx để hỗ trợ cache
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Cache Docker layers để giảm thời gian build
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{runner.os}}-buildx-${{github.sha}}
+          restore-keys: |
+            ${{runner.os}}-buildx-
+      
+      # Build image và lưu vào bộ nhớ đệm (ko đẩy lên Register)
+      - name: Build and export
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          outputs: type=docker,dest=/tmp/my-image.tar
+          tags: backend-app:latest
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
@@ -21,7 +44,7 @@ jobs:
           script: |
             # Di chuyển vào thư mục dự án
             cd /home/tutorial-nodejs-ci || exit
-            
+
             # Kéo code mới về
             git pull origin main
 
@@ -29,15 +52,15 @@ jobs:
             sudo docker build -t backend-app .
 
             # 4. Dừng và xóa container cũ nếu đang chạy
-            sudo docker stop backend || true
-            sudo docker rm backend || true
+            sudo docker stop backend-app || true
+            sudo docker rm -f backend-app || true
 
             # 5. Chạy container mới với port 5000
-            docker run -d \
-              --name backend-container \
-              --restart always \
-              -p 5000:5000
-              backend-app
+            sudo docker-compose up -d --build
+            
             # 6. Dọn dẹp các image cũ không dùng để tiết kiệm ổ cứng VPS
-            docker image prune -f 
-
+            sudo docker image prune -f
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
