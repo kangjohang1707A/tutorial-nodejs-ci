@@ -6,7 +6,7 @@ WORKDIR /app
 # Cache dependencies
 COPY package*.json ./
 # Dùng npm ci thay cho npm install để đảm bảo đúng phiên bản trong lockfile
-RUN npm ci
+RUN npm install
 
 # Copy toàn bộ source và build (nếu có dùng TypeScript hoặc Babel)
 COPY . .
