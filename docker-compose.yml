@@ -1,5 +1,6 @@
 services:
   app:
+    build: .
     image: backend-app:latest
     container_name: backend-container
     ports:

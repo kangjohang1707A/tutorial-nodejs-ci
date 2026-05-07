@@ -48,17 +48,13 @@ jobs:
             # Kéo code mới về
             git pull origin main
 
-            # 3. Build lại image mới
-            sudo docker build -t backend-app .
-
-            # 4. Dừng và xóa container cũ nếu đang chạy
-            sudo docker stop backend-app || true
-            sudo docker rm -f backend-app || true
-
-            # 5. Chạy container mới với port 5000
-            sudo docker run --name backend-container \
-              -p 5000:5000 -d backend-app:latest
-
+            # 3. Build lại image mới và khởi động lại container bằng docker compose
+            # Lệnh này sẽ tự động:
+            # - Build image dựa trên Dockerfile
+            # - Dừng và xóa container cũ 
+            # - Tạo và chạy container mới
+            sudo docker-compose up -d --build
+            
             # 6. Dọn dẹp các image cũ không dùng để tiết kiệm ổ cứng VPS
             sudo docker image prune -f
       - name: Move cache

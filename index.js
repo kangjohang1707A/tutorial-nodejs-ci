@@ -5,7 +5,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("hello world :)");
+  res.send("hello world đã chỉnh sửa lại deploy.yml và docker-compose :)");
 });
 
 app.use((req, res, next) => {
