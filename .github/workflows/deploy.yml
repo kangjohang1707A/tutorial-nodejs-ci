@@ -56,8 +56,9 @@ jobs:
             sudo docker rm -f backend-app || true
 
             # 5. Chạy container mới với port 5000
-            sudo docker-compose up -d --build
-            
+            sudo docker run --name backend-container \
+              -p 5000:5000 -d backend-app:latest
+
             # 6. Dọn dẹp các image cũ không dùng để tiết kiệm ổ cứng VPS
             sudo docker image prune -f
       - name: Move cache
