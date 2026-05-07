@@ -4,7 +4,7 @@ const port = process.env.PORT || 5000
 app.use(express.json())
 
 app.get('/', (req, res) => {
-    res.send('hello from simple server :)')
+    res.send('hello from simple server hello world :)')
 })
 
 app.listen(port,"0.0.0.0", () => console.log('> Server is up and running on port : ' + port))

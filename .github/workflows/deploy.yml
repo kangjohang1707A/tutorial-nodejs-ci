@@ -24,6 +24,4 @@ jobs:
             
             # Kéo code mới về
             git pull origin main
-            
-            # Restart lại Docker (ví dụ dự án của bạn dùng docker-compose)
-            docker-compose up -d --build
+
