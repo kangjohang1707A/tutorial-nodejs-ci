@@ -51,6 +51,10 @@ jobs:
             # 3. Build lại image mới và khởi động lại container bằng docker compose
             # Lệnh này sẽ tự động:
             # - Build image dựa trên Dockerfile
+            sudo docker stop backend-container 
+            sudo docker rm -f backend-container
+            sudo docker build -t backend-app .
+
             # - Dừng và xóa container cũ 
             # - Tạo và chạy container mới
             sudo docker-compose up -d --build
