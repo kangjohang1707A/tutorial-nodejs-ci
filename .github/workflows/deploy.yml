@@ -1,9 +1,8 @@
-name: Deploy to Ubuntu Server
+name: Deploy Backend to VPS NAT
 
 on:
   push:
-    branches:
-      - main  # Hoặc master tùy bạn
+    branches: [ main ] # Chạy khi bạn push vào branch main
 
 jobs:
   deploy:
@@ -12,16 +11,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Executing remote ssh commands using password
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /path/to/your/project  # Đường dẫn đến thư mục dự án trên server
+            # Di chuyển vào thư mục dự án
+            cd /home/tutorial-nodejs-ci 
+            
+            # Kéo code mới về
             git pull origin main
-            docker build -t my-node-app .
-            docker stop my-running-app || true
-            docker rm my-running-app || true
-            docker run -d -p 3000:3000 --name my-running-app my-node-app
+            
+            # Restart lại Docker (ví dụ dự án của bạn dùng docker-compose)
+            docker-compose up -d --build
