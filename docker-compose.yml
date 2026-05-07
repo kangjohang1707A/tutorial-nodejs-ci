@@ -1,7 +1,7 @@
 services:
   backend:
-    build: .
-    # image: backend-app:latest
+    # build: .
+    image: backend-app:latest
     container_name: backend-container
     ports:
       - "5000:5000"
