@@ -50,7 +50,7 @@ jobs:
 
             # 3. Build lại image mới và khởi động lại container bằng docker compose
             sudo docker build -t backend-app .
-            sudo docker-compose up -d
+            sudo docker compose up -d
             
             # 6. Dọn dẹp các image cũ không dùng để tiết kiệm ổ cứng VPS
             sudo docker image prune -f
